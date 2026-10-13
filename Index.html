@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delícias no Pote</title>
+<style>
+body{font-family:Arial;background:#fff0f5;color:#663344;margin:0;padding:20px}
+header{text-align:center;background:#f4a6c1;padding:20px;border-radius:15px}
+h1{color:#8b2450}
+.produto{background:white;padding:15px;margin:12px 0;border-radius:12px}
+button{background:#d63384;color:white;border:0;padding:12px;border-radius:8px;font-size:16px}
+input,select{padding:10px;margin:8px 0;max-width:100%}
+</style>
+</head>
+<body>
+<header>
+<h1>🌸 Delícias no Pote 🌸</h1>
+<p>Feito com carinho para você!</p>
+</header>
+<h2>🍰 Nosso cardápio</h2>
+<div id="cardapio"></div>
+<h3>Forma de pagamento</h3>
+<select id="pagamento">
+<option>Pix</option>
+<option>Dinheiro</option>
+<option>Cartão</option>
+</select>
+<h3>Seu nome</h3>
+<input id="nome" placeholder="Digite seu nome">
+<h3>Endereço para entrega</h3>
+<input id="endereco" placeholder="Endereço ou combinar retirada">
+<p>Taxa de entrega: combinar pelo WhatsApp.</p>
+<button onclick="pedir()">📲 Fazer pedido pelo WhatsApp</button>
+<script>
+const produtos=[
+["Pudim de leite condensado",8],
+["Mousse de maracujá",8],
+["Mousse de limão",8],
+["Bolo no pote",15],
+["Batata recheada",25],
+["Coca-Cola lata",5],
+["Fanta lata",5]
+];
+const carrinho={};
+document.getElementById("cardapio").innerHTML=produtos.map((p,i)=>`
+<div class="produto">
+<strong>${p[0]}</strong><br>
+Preço: R$ ${p[1].toFixed(2).replace(".",",")}<br>
+<label>Quantidade:
+<input type="number" min="0" value="0" id="q${i}" style="width:65px">
+</label>
+</div>`).join("");
+function pedir(){
+let itens=[],total=0;
+produtos.forEach((p,i)=>{
+let q=Number(document.getElementById("q"+i).value);
+if(q>0){itens.push(q+" x "+p[0]+" - R$ "+(q*p[1]).toFixed(2).replace(".",","));total+=q*p[1]}
+});
+if(!itens.length){alert("Escolha pelo menos um produto.");return}
+let msg="Olá! Quero fazer um pedido na Delícias no Pote.%0A";
+msg+="Nome: "+encodeURIComponent(document.getElementById("nome").value)+"%0A";
+msg+=encodeURIComponent(itens.join("\n"))+"%0A";
+msg+="Total dos produtos: R$ "+total.toFixed(2).replace(".",",")+"%0A";
+msg+="Pagamento: "+encodeURIComponent(document.getElementById("pagamento").value)+"%0A";
+msg+="Endereço: "+encodeURIComponent(document.getElementById("endereco").value);
+window.open("https://wa.me/5583987888387?text="+msg,"_blank");
+}
+</script>
+</body>
+</html>
